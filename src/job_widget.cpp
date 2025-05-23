@@ -61,8 +61,8 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
     QRegExp rxSize(
         R"(^Transferred:\s+(\S+ \S+) \(([^)]+)\)$)"); // Until rclone 1.42
     QRegExp rxSize2(
-        R"(^Transferred:\s+([0-9.]+)(\S)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
-    QRegExp rxErrors(R"(^Errors:\s+(\S+)$)");
+        R"(^Transferred:\s+([0-9.]+)\s?(\S+)? \/ (\S+) (\S+), ([0-9%-]+), (\S+ \S+), (\S+) (\S+)$)"); // Starting with rclone 1.43
+    QRegExp rxErrors(R"(^Errors:\s+(.+)$)");
     QRegExp rxChecks(R"(^Checks:\s+(\S+)$)"); // Until rclone 1.42
     QRegExp rxChecks2(
         R"(^Checks:\s+(\S+) \/ (\S+), ([0-9%-]+)$)");   // Starting with
@@ -107,7 +107,7 @@ JobWidget::JobWidget(QProcess *process, const QString &info,
         ui.size->setText(rxSize.cap(1));
         ui.bandwidth->setText(rxSize.cap(2));
       } else if (rxSize2.exactMatch(line)) {
-        ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + "B" + ", " +
+        ui.size->setText(rxSize2.cap(1) + " " + rxSize2.cap(2) + ", " +
                          rxSize2.cap(5));
         ui.bandwidth->setText(rxSize2.cap(6));
         ui.eta->setText(rxSize2.cap(8));
